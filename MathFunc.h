@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "struct.h"
 #include <Novice.h>
 #include <assert.h>
@@ -40,3 +40,12 @@ Vector3 Lerp(const Vector3& a, const Vector3& b, float t);
 //Vector3 Bezier(const Vector3& p0, const Vector3& p1, const Vector3& p2, float t);
 void RotateInCircle(const Sphere& sphere, Vector3& position, float& angle);
 
+
+// 任意軸回転行列
+Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
+
+//数値表示
+static const int kColumnWidth = 60;
+static const int kRowHeight = 20;
+
+void MatrixScreenPrint(int x, int y, const Matrix4x4& matrix, const char* label);

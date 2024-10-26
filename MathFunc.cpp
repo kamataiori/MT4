@@ -1,4 +1,4 @@
-#include "MathFunc.h"
+﻿#include "MathFunc.h"
 #include <algorithm>
 
 Vector3 Add(const Vector3& v1, const Vector3& v2)
@@ -509,4 +509,51 @@ void RotateInCircle(const Sphere& sphere, Vector3& position, float& angle)
 	//position.x += velocity.x;
 	//position.y += velocity.y;
 	//position.z += velocity.z;
+}
+
+Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle)
+{
+	Matrix4x4 rotationMatrix;
+	float rad = angle * (float)M_PI/* / 360.0f*/;
+	float cosA = cos(rad);
+	float sinA = sin(rad);
+	float oneMinusCosA = 1.0f - cosA;
+
+	// 正規化
+	Vector3 n = Normalize(axis);
+	float x = n.x;
+	float y = n.y;
+	float z = n.z;
+
+	rotationMatrix.m[0][0] = x * x * oneMinusCosA + cosA;
+	rotationMatrix.m[0][1] = x * y * oneMinusCosA - z * sinA;
+	rotationMatrix.m[0][2] = x * z * oneMinusCosA + y * sinA;
+	rotationMatrix.m[0][3] = 0.0f;
+
+	rotationMatrix.m[1][0] = y * x * oneMinusCosA + z * sinA;
+	rotationMatrix.m[1][1] = y * y * oneMinusCosA + cosA;
+	rotationMatrix.m[1][2] = y * z * oneMinusCosA - x * sinA;
+	rotationMatrix.m[1][3] = 0.0f;
+
+	rotationMatrix.m[2][0] = z * x * oneMinusCosA - y * sinA;
+	rotationMatrix.m[2][1] = z * y * oneMinusCosA + x * sinA;
+	rotationMatrix.m[2][2] = z * z * oneMinusCosA + cosA;
+	rotationMatrix.m[2][3] = 0.0f;
+
+	rotationMatrix.m[3][0] = 0.0f;
+	rotationMatrix.m[3][1] = 0.0f;
+	rotationMatrix.m[3][2] = 0.0f;
+	rotationMatrix.m[3][3] = 1.0f;
+
+	return rotationMatrix;
+}
+
+void MatrixScreenPrint(int x, int y, const Matrix4x4& matrix, const char* label)
+{
+	Novice::ScreenPrintf(x, y, "%s", label);
+	for (int row = 0; row < 4; ++row) {
+		for (int column = 0; column < 4; ++column) {
+			Novice::ScreenPrintf(x + column * kColumnWidth, y + row * kRowHeight + kRowHeight, "%6.02f", matrix.m[row][column]);
+		}
+	}
 }

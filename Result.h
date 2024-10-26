@@ -19,5 +19,12 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw();
+
+private:
+
+	Vector3 axis;
+	float angle;
+	Matrix4x4 rotateMatrix;
+
 };
 
