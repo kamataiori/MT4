@@ -45,7 +45,7 @@ void RotateInCircle(const Sphere& sphere, Vector3& position, float& angle);
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
 
 //数値表示
-static const int kColumnWidth = 60;
+static const int kColumnWidth = 100;
 static const int kRowHeight = 20;
 
 void MatrixScreenPrint(int x, int y, const Matrix4x4& matrix, const char* label);

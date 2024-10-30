@@ -15,4 +15,6 @@ void Result::Update()
 void Result::Draw()
 {
 	MatrixScreenPrint(0, 0, rotateMatrix,"rotateMatrix");
+
+	//Novice::ScreenPrintf(0, 0, "angle.%f", angle);
 }
