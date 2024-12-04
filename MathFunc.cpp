@@ -526,16 +526,16 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle)
 
 	rotationMatrix.m[0][0] = x * x * oneMinusCosA + cosA;
 	rotationMatrix.m[0][1] = y * x * oneMinusCosA + z * sinA;
-	rotationMatrix.m[0][2] = y * z * oneMinusCosA - x * sinA;
+	rotationMatrix.m[0][2] = x * z * oneMinusCosA - y * sinA;
 	rotationMatrix.m[0][3] = 0.0f;
 
 	rotationMatrix.m[1][0] = x * y * oneMinusCosA - z * sinA;
 	rotationMatrix.m[1][1] = y * y * oneMinusCosA + cosA;
-	rotationMatrix.m[1][2] = x * z * oneMinusCosA + y * sinA;
+	rotationMatrix.m[1][2] = y * z * oneMinusCosA + x * sinA;
 	rotationMatrix.m[1][3] = 0.0f;
 
-	rotationMatrix.m[2][0] = z * y * oneMinusCosA + x * sinA;
-	rotationMatrix.m[2][1] = z * x * oneMinusCosA - y * sinA;
+	rotationMatrix.m[2][0] = z * x * oneMinusCosA + y * sinA;
+	rotationMatrix.m[2][1] = z * y * oneMinusCosA - x * sinA;
 	rotationMatrix.m[2][2] = z * z * oneMinusCosA + cosA;
 	rotationMatrix.m[2][3] = 0.0f;
 
@@ -545,6 +545,39 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle)
 	rotationMatrix.m[3][3] = 1.0f;
 
 	return rotationMatrix;
+}
+
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to)
+{
+	Vector3 fromNorm = Normalize(from);
+	Vector3 toNorm = Normalize(to);
+
+	// 回転軸と角度の計算
+	Vector3 axis = Cross(fromNorm, toNorm);
+	float dot = Dot(fromNorm, toNorm);
+
+	// 特殊ケースの処理（平行または反並行）
+	if (Length(axis) < 1e-6) { // 平行または反並行の場合
+		if (dot > 0.0f) {
+			return Matrix4x4::Identity(); // 同方向（平行）
+		}
+		else {
+			Vector3 orthogonal;
+			if (std::fabs(fromNorm.x) < 1e-6 && std::fabs(fromNorm.y) < 1e-6) {
+				orthogonal = { 0.0f, 1.0f, 0.0f }; // Z軸に近い場合
+			}
+			else {
+				orthogonal = { fromNorm.y, -fromNorm.x, 0.0f }; // 簡単な垂直ベクトル
+			}
+			orthogonal = Normalize(orthogonal);
+			return MakeRotateAxisAngle(orthogonal, static_cast<float>(M_PI)); // 180度回転
+		}
+	}
+
+	axis = Normalize(axis);
+
+	// 角度に基づいて回転行列を作成
+	return MakeRotateAxisAngle(axis, std::acos(dot));
 }
 
 void MatrixScreenPrint(int x, int y, const Matrix4x4& matrix, const char* label)

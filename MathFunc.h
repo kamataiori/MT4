@@ -43,6 +43,7 @@ void RotateInCircle(const Sphere& sphere, Vector3& position, float& angle);
 
 // 任意軸回転行列
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
 
 //数値表示
 static const int kColumnWidth = 100;
