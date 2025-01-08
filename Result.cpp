@@ -12,11 +12,8 @@ void Result::Update()
 
 void Result::Draw()
 {
-	MatrixScreenPrint(0, 0, identity, "identity");
-	MatrixScreenPrint(0, kRowHeight, conj, "Conjugate");
-	MatrixScreenPrint(0, kRowHeight * 2, inv, "Inverse");
-	MatrixScreenPrint(0, kRowHeight * 3, normal, "Normalize");
-	MatrixScreenPrint(0, kRowHeight * 4, mul1, "Multiply(q1, q2)");
-	MatrixScreenPrint(0, kRowHeight * 5, mul2, "Multiply(q2, q1)");
-	Novice::ScreenPrintf(0, kRowHeight * 6, "Norm                    %f", norm);
+	MatrixScreenPrint(0, kRowHeight * 0, rotation, "   : rotation");
+	MatrixScreenPrint(0, kRowHeight * 1, rotateMatrix, "rotateMatrix");
+	Vector3ScreenPrint(0, kRowHeight * 6, rotateByQuaternion, "   : rotateByQuaternion");
+	Vector3ScreenPrint(0, kRowHeight * 7, rotateByMatrix, "   : rotateByMatrix");
 }

@@ -607,6 +607,18 @@ void MatrixScreenPrint(int x, int y, const Quaternion& quaternion, const char* l
 	}
 }
 
+void Vector3ScreenPrint(int x, int y, const Vector3& vector, const char* label)
+{
+	const char* components[] = { "x", "y", "z" };
+	const float values[] = { vector.x, vector.y, vector.z };
+
+	Novice::ScreenPrintf(x, y, "%s", label);
+	for (int i = 0; i < 3; ++i) {
+		Novice::ScreenPrintf(x + (i + 1) * (kColumnWidth + 70), y, "%s: %7.3f", components[i], values[i]);
+	}
+
+}
+
 Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs)
 {
 	Quaternion result;
@@ -649,4 +661,39 @@ Quaternion Inverse(const Quaternion& quaternion)
 	}
 	Quaternion conjugate = Conjugate(quaternion);
 	return { conjugate.x / normSq, conjugate.y / normSq, conjugate.z / normSq, conjugate.w / normSq };
+}
+
+Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle)
+{
+	Vector3 normalizedAxis = Normalize(axis);
+	float sinHalfAngle = sin(angle / 2.0f);
+	return {
+		normalizedAxis.x * sinHalfAngle,
+		normalizedAxis.y * sinHalfAngle,
+		normalizedAxis.z * sinHalfAngle,
+		cos(angle / 2.0f)
+	};
+}
+
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion)
+{
+	Quaternion qVector = { vector.x, vector.y, vector.z, 0.0f };
+	Quaternion qConjugate = Conjugate(quaternion);
+	Quaternion rotated = Multiply(Multiply(quaternion, qVector), qConjugate);
+	return { rotated.x, rotated.y, rotated.z };
+}
+
+Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion)
+{
+	float x = quaternion.x;
+	float y = quaternion.y;
+	float z = quaternion.z;
+	float w = quaternion.w;
+
+	return {
+		1 - 2 * (y * y + z * z), 2 * (x * y + z * w),     2 * (x * z - y * w),     0.0f,
+		2 * (x * y - z * w),     1 - 2 * (x * x + z * z), 2 * (y * z + x * w),     0.0f,
+		2 * (x * z + y * w),     2 * (y * z - x * w),     1 - 2 * (x * x + y * y), 0.0f,
+		0.0f,                   0.0f,                   0.0f,                   1.0f
+	};
 }
