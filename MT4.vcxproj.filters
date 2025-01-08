@@ -124,5 +124,6 @@
     <ClInclude Include="Result.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="MathFunc.h" />
+    <ClInclude Include="Quaternion.h" />
   </ItemGroup>
 </Project>

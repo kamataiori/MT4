@@ -150,6 +150,7 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClInclude Include="C:\KamataEngine\Adapter\Novice.h" />
     <ClInclude Include="MainLoop.h" />
     <ClInclude Include="MathFunc.h" />
+    <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="struct.h" />
   </ItemGroup>

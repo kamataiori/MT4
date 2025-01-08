@@ -589,3 +589,64 @@ void MatrixScreenPrint(int x, int y, const Matrix4x4& matrix, const char* label)
 		}
 	}
 }
+
+void MatrixScreenPrint(int x, int y, const Quaternion& quaternion, const char* label)
+{
+	/*Novice::ScreenPrintf(x, y, "%s", label);
+	Novice::ScreenPrintf(x, y + kRowHeight, "x: %7.3f", quaternion.x);
+	Novice::ScreenPrintf(x, y + 2 * kRowHeight, "y: %7.3f", quaternion.y);
+	Novice::ScreenPrintf(x, y + 3 * kRowHeight, "z: %7.3f", quaternion.z);
+	Novice::ScreenPrintf(x, y + 4 * kRowHeight, "w: %7.3f", quaternion.w);*/
+
+	const char* components[] = { "x", "y", "z", "w" };
+	const float values[] = { quaternion.x, quaternion.y, quaternion.z, quaternion.w };
+
+	Novice::ScreenPrintf(x, y, "%s", label);
+	for (int i = 0; i < 4; ++i) {
+		Novice::ScreenPrintf(x + (i + 1) * kColumnWidth + 100, y, "%7.3f", values[i]);
+	}
+}
+
+Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs)
+{
+	Quaternion result;
+	result.w = lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z;
+	result.x = lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y;
+	result.y = lhs.w * rhs.y - lhs.x * rhs.z + lhs.y * rhs.w + lhs.z * rhs.x;
+	result.z = lhs.w * rhs.z + lhs.x * rhs.y - lhs.y * rhs.x + lhs.z * rhs.w;
+	return result;
+}
+
+Quaternion IdentityQuaternion()
+{
+	return { 0.0f, 0.0f, 0.0f, 1.0f };
+}
+
+Quaternion Conjugate(const Quaternion& quaternion)
+{
+	return { -quaternion.x, -quaternion.y, -quaternion.z, quaternion.w };
+}
+
+float Norm(const Quaternion& quaternion)
+{
+	return std::sqrt(quaternion.x * quaternion.x + quaternion.y * quaternion.y + quaternion.z * quaternion.z + quaternion.w * quaternion.w);
+}
+
+Quaternion Normalize(const Quaternion& quaternion)
+{
+	float norm = Norm(quaternion);
+	if (norm == 0.0f) {
+		return { 0.0f, 0.0f, 0.0f, 1.0f }; // デフォルト値
+	}
+	return { quaternion.x / norm, quaternion.y / norm, quaternion.z / norm, quaternion.w / norm };
+}
+
+Quaternion Inverse(const Quaternion& quaternion)
+{
+	float normSq = quaternion.x * quaternion.x + quaternion.y * quaternion.y + quaternion.z * quaternion.z + quaternion.w * quaternion.w;
+	if (normSq == 0.0f) {
+		return { 0.0f, 0.0f, 0.0f, 1.0f }; // デフォルト値
+	}
+	Quaternion conjugate = Conjugate(quaternion);
+	return { conjugate.x / normSq, conjugate.y / normSq, conjugate.z / normSq, conjugate.w / normSq };
+}
