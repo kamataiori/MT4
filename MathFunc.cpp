@@ -603,7 +603,7 @@ void MatrixScreenPrint(int x, int y, const Quaternion& quaternion, const char* l
 
 	Novice::ScreenPrintf(x, y, "%s", label);
 	for (int i = 0; i < 4; ++i) {
-		Novice::ScreenPrintf(x + (i + 1) * kColumnWidth + 100, y, "%7.3f", values[i]);
+		Novice::ScreenPrintf(x + (i + 1) * kColumnWidth + 100, y, "%7.2f", values[i]);
 	}
 }
 
@@ -614,7 +614,7 @@ void Vector3ScreenPrint(int x, int y, const Vector3& vector, const char* label)
 
 	Novice::ScreenPrintf(x, y, "%s", label);
 	for (int i = 0; i < 3; ++i) {
-		Novice::ScreenPrintf(x + (i + 1) * (kColumnWidth + 70), y, "%s: %7.3f", components[i], values[i]);
+		Novice::ScreenPrintf(x + (i + 1) * (kColumnWidth + 70), y, "%s %7.2f", components[i], values[i]);
 	}
 
 }
