@@ -12,8 +12,10 @@ void Result::Update()
 
 void Result::Draw()
 {
-	MatrixScreenPrint(0, kRowHeight * 0, rotation, "rotation : ");
-	MatrixScreenPrint(0, kRowHeight * 1, rotateMatrix, "rotateMatrix");
-	Vector3ScreenPrint(0, kRowHeight * 6, rotateByQuaternion, "rotateByQuaternion : ");
-	Vector3ScreenPrint(0, kRowHeight * 7, rotateByMatrix, "rotateByMatrix : ");
+	MatrixScreenPrint(0, kRowHeight * 0, interpolate0, "interpolate0 : ");
+	MatrixScreenPrint(0, kRowHeight * 1, interpolate1, "interpolate1 : ");
+	MatrixScreenPrint(0, kRowHeight * 2, interpolate2, "interpolate2 : ");
+	MatrixScreenPrint(0, kRowHeight * 3, interpolate3, "interpolate3 : ");
+	MatrixScreenPrint(0, kRowHeight * 4, interpolate4, "interpolate4 : ");
+	
 }

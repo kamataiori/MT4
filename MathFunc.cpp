@@ -697,3 +697,36 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion)
 		0.0f,                   0.0f,                   0.0f,                   1.0f
 	};
 }
+
+Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t)
+{
+	float dot = q0.x * q1.x + q0.y * q1.y + q0.z * q1.z + q0.w * q1.w;
+
+	Quaternion q1Modified = q1;
+	if (dot < 0.0f) {
+		q1Modified = { -q1.x, -q1.y, -q1.z, -q1.w };
+		dot = -dot;
+	}
+
+	float theta = acosf(dot);
+	float sinTheta = sinf(theta);
+
+	if (sinTheta < 1e-6) {
+		return {
+			q0.x * (1.0f - t) + q1Modified.x * t,
+			q0.y * (1.0f - t) + q1Modified.y * t,
+			q0.z * (1.0f - t) + q1Modified.z * t,
+			q0.w * (1.0f - t) + q1Modified.w * t
+		};
+	}
+
+	float scale0 = sinf((1.0f - t) * theta) / sinTheta;
+	float scale1 = sinf(t * theta) / sinTheta;
+
+	return {
+		scale0 * q0.x + scale1 * q1Modified.x,
+		scale0 * q0.y + scale1 * q1Modified.y,
+		scale0 * q0.z + scale1 * q1Modified.z,
+		scale0 * q0.w + scale1 * q1Modified.w
+	};
+}
