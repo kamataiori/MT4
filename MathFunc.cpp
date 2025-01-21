@@ -698,20 +698,22 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion)
 	};
 }
 
-Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t)
-{
+Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
+	const float EPSILON = 0.0005f; // 極小値
 	float dot = q0.x * q1.x + q0.y * q1.y + q0.z * q1.z + q0.w * q1.w;
+
+	// dotを範囲内にクランプ（符号は維持する）
+	float absDot = fabsf(dot);
+	absDot = fmaxf(-1.0f, fminf(1.0f, absDot));
 
 	Quaternion q1Modified = q1;
 	if (dot < 0.0f) {
 		q1Modified = { -q1.x, -q1.y, -q1.z, -q1.w };
-		dot = -dot;
+		dot = -dot; // dotの符号を反転
 	}
 
-	float theta = acosf(dot);
-	float sinTheta = sinf(theta);
-
-	if (sinTheta < 1e-6) {
+	// 非常に近い場合は線形補間を使用
+	if (dot >= 1.0f - EPSILON) {
 		return {
 			q0.x * (1.0f - t) + q1Modified.x * t,
 			q0.y * (1.0f - t) + q1Modified.y * t,
@@ -720,9 +722,14 @@ Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t)
 		};
 	}
 
+	// 球面線形補間を計算
+	float theta = acosf(absDot); // absDotを使用
+	float sinTheta = sinf(theta);
+
 	float scale0 = sinf((1.0f - t) * theta) / sinTheta;
 	float scale1 = sinf(t * theta) / sinTheta;
 
+	// マイナス符号の考慮
 	return {
 		scale0 * q0.x + scale1 * q1Modified.x,
 		scale0 * q0.y + scale1 * q1Modified.y,
